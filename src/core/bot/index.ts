@@ -1,5 +1,18 @@
-import { Bot } from 'grammy'
+import { Bot, BotError, Context, session } from "grammy"
+import { MyContext, SessionData } from "src/types"
+import { freeStorage } from "@grammyjs/storage-free"
 
-const bot = new Bot(String(process.env.BOT_TOKEN))
+const bot = new Bot<MyContext>(String(process.env.BOT_TOKEN))
+
+bot.catch((err: BotError) => {
+  console.error(`Error while handling update`, err)
+})
+
+bot.use(
+  session({
+    initial: () => ({ myString: "Hello, world!" }),
+    storage: freeStorage<SessionData>(bot.token),
+  })
+)
 
 export default bot

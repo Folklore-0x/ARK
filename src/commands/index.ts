@@ -1,9 +1,10 @@
-import { Composer } from 'grammy'
+import { Composer } from "grammy"
 
-import qa from './qa'
+import bot from "./bot"
+import { MyContext } from "src/types"
 
-const composer = new Composer()
+const composer = new Composer<MyContext>()
 
-composer.on('message').command('qa', qa)
+composer.on("message").command("bot", bot)
 
 export default composer

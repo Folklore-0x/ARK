@@ -3,7 +3,6 @@ import fetch from "node-fetch"
 
 class Mendable {
   private apiKey: string
-  private conversationId?: string
 
   constructor(api_key: string) {
     this.apiKey = api_key
@@ -29,18 +28,11 @@ class Mendable {
       return "I'm sorry, I didn't understand that."
     }
 
-    if (!this.conversationId) {
-      this.conversationId = await this._start_conversation()
-    }
-
-    // Send another chat action in case the api call took some time.
-    console.log("Sending chat action: typing")
-    await ctx.replyWithChatAction("typing")
-
+    const conversationId = await this._start_conversation()
     const data = {
       question: query,
       shouldStream: false,
-      conversation_id: this.conversationId,
+      conversation_id: conversationId,
       history: [],
       api_key: this.apiKey,
     }
