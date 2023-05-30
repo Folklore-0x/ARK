@@ -1,9 +1,9 @@
-import { Composer } from "grammy";
+import { Composer } from 'grammy'
 
-import hello from "./hello";
+import qa from './qa'
 
-const composer = new Composer();
+const composer = new Composer()
 
-composer.command("hello", hello);
+composer.on('message').command('qa', qa)
 
-export default composer;
+export default composer
