@@ -10,7 +10,7 @@ bot.catch((err: BotError) => {
 
 bot.use(
   session({
-    initial: () => ({ myString: "Hello, world!" }),
+    initial: () => ({ conversation: null }),
     storage: freeStorage<SessionData>(bot.token),
   })
 )
