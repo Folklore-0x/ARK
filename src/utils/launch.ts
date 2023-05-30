@@ -1,4 +1,4 @@
-import { Bot, Context } from "grammy"
+import { Bot } from "grammy"
 import { MyContext } from "src/types"
 
 const production = async (bot: Bot<MyContext>): Promise<void> => {
