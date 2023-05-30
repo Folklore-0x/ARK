@@ -5,7 +5,7 @@ import { freeStorage } from "@grammyjs/storage-free"
 const bot = new Bot<MyContext>(String(process.env.BOT_TOKEN))
 
 bot.catch((err: BotError) => {
-  console.error(`Error while handling update`, err)
+  console.error(err)
 })
 
 bot.use(
