@@ -23,7 +23,7 @@ class Mendable {
   }
 
   public async call(ctx: MyContext): Promise<string> {
-    const question = ctx.message?.text?.replace("/bot", "").trim()
+    const question = ctx.message?.text?.replace("/ask", "").trim()
 
     if (!question) {
       return "I'm sorry, I didn't understand that."
@@ -78,7 +78,7 @@ class Mendable {
   }
 }
 
-const bot = async (ctx: MyContext): Promise<void> => {
+const ask = async (ctx: MyContext): Promise<void> => {
   // Limit the bot command to the official group chat.
   if (!(await hasPermissions(ctx))) return
 
@@ -111,4 +111,4 @@ const bot = async (ctx: MyContext): Promise<void> => {
   isFinished = true
 }
 
-export default bot
+export default ask
