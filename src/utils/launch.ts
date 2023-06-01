@@ -3,7 +3,7 @@ import { MyContext } from "src/types"
 
 const production = async (bot: Bot<MyContext>): Promise<void> => {
   try {
-    await bot.api.setWebhook(`${process.env.VERCEL_URL}/api/index`)
+    await bot.api.setWebhook(`${process.env.VERCEL_URL}`)
     console.log(`[SERVER] Bot starting webhook`)
   } catch (e) {
     console.error(e)
