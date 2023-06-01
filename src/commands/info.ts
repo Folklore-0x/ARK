@@ -1,6 +1,9 @@
 import { MyContext } from "src/types"
 
-const reset = async (ctx: MyContext): Promise<void> => {
+/**
+ * Console.log the chat ID.
+ */
+const info = async (ctx: MyContext): Promise<void> => {
   console.log("Logging info for chat: ", ctx.chat?.id)
 
   await ctx.reply("This chat can now be configured by the admins.", {
@@ -9,4 +12,4 @@ const reset = async (ctx: MyContext): Promise<void> => {
   })
 }
 
-export default reset
+export default info
