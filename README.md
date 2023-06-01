@@ -56,6 +56,9 @@ On your project's page, go to Settings > Environment Variables and add the follo
 | `MENDABLE_API_KEY` | _your API key_                   |
 | ------------------ | -------------------------------- |
 | `ALLOWED_CHAT_IDS` | _your allowed telegram chat IDs_ |
+| ------------------ | -------------------------------- |
+| `VERCEL_URL`       | _the url to your vercel app_     |
+| ------------------ | -------------------------------- |
 
 
 That's it! Your bot should be ready to go.
