@@ -58,9 +58,4 @@ On your project's page, go to Settings > Environment Variables and add the follo
 | `ALLOWED_CHAT_IDS` | _your allowed telegram chat IDs_ |
 
 
-
-You also need to set the webhook URL manually: 
-
-`CURL "https://api.telegram.org/bot<bot_token>/setWebhook?url=<webhook_url>"`
-
 That's it! Your bot should be ready to go.
