@@ -18,7 +18,7 @@ To ask a question to the Mendable API:
 
 The chat history is saved in Grammy's free storage (only the three most recent messages). To reset the chat history:
 
-`/reset`
+`/start`
 
 
 ## Development
