@@ -13,6 +13,8 @@ const reset = async (ctx: MyContext): Promise<void> => {
     delete ctx.session.conversations[chatId]
   }
 
+  console.log(`Session after resetting: ${ctx.session}`)
+
   await ctx.reply("The bot was reset.", {
     parse_mode: "Markdown",
     disable_web_page_preview: true,
