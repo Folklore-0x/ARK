@@ -1,17 +1,17 @@
 import { Context as GrammyContext } from "grammy"
 
-interface HistoryItem {
+export interface HistoryItem {
   prompt: string
   response: string
 }
 
-interface Conversation {
+export interface Conversation {
   conversationId: string
   history: HistoryItem[]
 }
 
 export interface SessionData {
-  conversation: Conversation | null
+  conversations: { [chatId: string]: Conversation }
 }
 
 export interface MyContext extends GrammyContext {

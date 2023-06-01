@@ -10,7 +10,7 @@ bot.catch((err: BotError) => {
 
 bot.use(
   session({
-    initial: () => ({ conversation: null }),
+    initial: () => ({ conversations: {} }),
     storage: freeStorage<SessionData>(bot.token),
   })
 )

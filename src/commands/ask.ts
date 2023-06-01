@@ -1,7 +1,23 @@
 import fetch from "node-fetch"
 import { hasPermissions } from "./auth"
-import { MyContext } from "src/types"
+import { Conversation, MyContext } from "src/types"
 
+/**
+ * Get the conversation from the context.
+ */
+const getConversation = (context: MyContext): Conversation | null => {
+  const conversations = context.session?.conversations
+
+  if (!conversations) {
+    return null
+  }
+
+  return conversations[String(context.chat?.id)] ?? null
+}
+
+/**
+ * A wrapper of the Mendable API.
+ */
 class Mendable {
   private apiKey: string
 
@@ -9,7 +25,12 @@ class Mendable {
     this.apiKey = api_key
   }
 
-  private async _start_conversation(): Promise<string> {
+  /**
+   * Start a new Mendable conversation.
+   *
+   * @returns The conversation ID.
+   */
+  private async _start_conversation(): Promise<Conversation> {
     const data = { api_key: this.apiKey }
 
     const response = await fetch("https://api.mendable.ai/v0/newConversation", {
@@ -19,9 +40,19 @@ class Mendable {
     })
 
     const response_data = await response.json()
-    return response_data["conversation_id"]
+    return {
+      conversationId: response_data["conversation_id"],
+      history: [],
+    }
   }
 
+  /**
+   * Call the Mendable API.
+   *
+   * Also updates the session history.
+   *
+   * @returns The formatted response, including sources.
+   */
   public async call(ctx: MyContext): Promise<string> {
     const question = ctx.message?.text?.replace("/ask", "").trim()
 
@@ -29,28 +60,25 @@ class Mendable {
       return "I'm sorry, I didn't understand that."
     }
 
-    // Get the conversation ID from the session.
-    let conversationId = ctx.session?.conversation?.conversationId
-    if (!conversationId) {
-      conversationId = await this._start_conversation()
-
-      // Reset the session.
-      ctx.session = {
-        conversation: {
-          conversationId,
-          history: [],
-        },
-      }
+    //
+    // Get the conversation ID from the session, or start a new one.
+    //
+    let conversation = getConversation(ctx)
+    console.log("Conversation: ", conversation)
+    if (!conversation) {
+      conversation = await this._start_conversation()
+      ctx.session.conversations[String(ctx.chat?.id)] = conversation
     }
 
     const data = {
       question: question,
       shouldStream: false,
-      conversation_id: conversationId,
-      history: ctx.session?.conversation?.history,
+      conversation_id: conversation.conversationId,
+      history: conversation.history,
       api_key: this.apiKey,
     }
 
+    // Call the API.
     const response = await fetch("https://api.mendable.ai/v0/mendableChat", {
       method: "POST",
       body: JSON.stringify(data),
@@ -58,10 +86,10 @@ class Mendable {
     })
 
     const responseData = await response.json()
-
     let responseText = responseData["answer"]["text"]
 
-    const sources = responseData["sources"].slice(0, 5) // first five sources
+    // Append the first five sources at the end of the response.
+    const sources = responseData["sources"].slice(0, 5)
     let sourceAppendix = ""
     if (sources.length > 0) {
       sourceAppendix += "\n\n*Sources:*\n"
@@ -69,10 +97,15 @@ class Mendable {
     }
 
     // Add the result to the session history.
-    ctx.session?.conversation?.history.push({
+    conversation.history.push({
       prompt: question,
       response: responseText,
     })
+
+    // Only keep the last 3 items in the history.
+    // This is to prevent the session from growing too large,
+    // and the Mendable prompt from getting too long.
+    conversation.history = conversation.history.slice(-3)
 
     return responseText + sourceAppendix
   }
@@ -91,17 +124,9 @@ const ask = async (ctx: MyContext): Promise<void> => {
     }
   }, 5000)
 
-  // Get the response from
+  // Get the response from Mendable.
   const mendable = new Mendable(String(process.env.MENDABLE_API_KEY))
   const response = await mendable.call(ctx)
-
-  // Only keep the last 3 items in the history.
-  // This is to prevent the session from growing too large,
-  // and the Mendable prompt from getting too long.
-  if (ctx.session?.conversation?.history) {
-    ctx.session.conversation.history =
-      ctx.session.conversation.history.slice(-3)
-  }
 
   await ctx.reply(response, {
     parse_mode: "Markdown",
