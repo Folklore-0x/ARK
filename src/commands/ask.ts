@@ -93,7 +93,10 @@ class Mendable {
     let sourceAppendix = ""
     if (sources.length > 0) {
       sourceAppendix += "\n\n*Sources:*\n"
-      sourceAppendix += sources.map((s: any) => s["link"]).join("\n")
+      sourceAppendix += sources
+        .map((s: any) => s["link"])
+        .join("\n")
+        .replace(/_/g, "\\_") // Escape underscores in markdown.
     }
 
     // Add the result to the session history.
