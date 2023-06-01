@@ -1,17 +1,30 @@
-# grammY Vercel boilerplate
+# Community Telegram Bot
 
-[grammY](https://grammy.dev/) boilerplate to develop and host telegram bots on [Vercel](https://vercel.com/).
+This is a community telegram bot that answers questions about a community through the Mendable API.
 
-## Features
+It uses the Grammy.js Telegram bot framework and is deployed on Vercel.
 
--   Typescript support
--   Linting and formatting preconfigured
--   Development friendly environment with Nodemon
+
+## Usage
+
+If it is the first time you use the bot in a new chat, you need to add the chat ID to ALLOWED_CHAT_IDS in .env (or in production, to Vercel settings). To log the chat ID to the console, run:
+
+`/info`
+
+To ask a question to the Mendable API:
+
+`/ask {question}`
+
+
+The chat history is saved in Grammy's free storage (only the three most recent messages). To reset the chat history:
+
+`/reset`
+
 
 ## Development
 
 ```bash
-# Copy the .env example and change the BOT_TOKEN to match yours
+# Copy the .env example and fill in the BOT_TOKEN, MENDABLE_API_KEY and ALLOWED_CHAT_IDS.
 $ cp .env.example .env
 # Install the dependencies
 $ npm install
@@ -21,7 +34,11 @@ $ npm run dev
 
 ## Deployment
 
-#### Terminal
+The bot is deployed as a [serverless Vercel function](https://vercel.com/folklore-0x/folklore-bot). To deploy a new version, simply push your changes to main.
+
+### Vercel Setup
+
+Running the following commands will create a new vercel project:
 
 ```bash
 # Install vercel cli if you don't have it yet
@@ -30,48 +47,20 @@ $ npm i -g vercel
 $ vercel --prod
 ```
 
-#### Vercel
-
 On your project's page, go to Settings > Environment Variables and add the following variables:
 
-| Name        | Value            |
-| ----------- | ---------------- |
-| `BOT_TOKEN` | _your bot token_ |
+| Name               | Value                            |
+| ------------------ | -------------------------------- |
+| `BOT_TOKEN`        | _your bot token_                 |
+| ------------------ | -------------------------------- |
+| `MENDABLE_API_KEY` | _your API key_                   |
+| ------------------ | -------------------------------- |
+| `ALLOWED_CHAT_IDS` | _your allowed telegram chat IDs_ |
 
-> You can also set the webhook URL manually accessing `https://api.telegram.org/bot<bot_token>/setWebhook?url=<webhook_url>` on your browser
 
-Finally, you should see a "Hello, world!" from the bot when typing `/hello` in chat.
 
-## Using Express instead of Vercel's API
+You also need to set the webhook URL manually: 
 
-By default `grammy-vercel-boilerplate` does not use extra dependencies, but in case you want to use Express, first add it as a dependency
+`CURL "https://api.telegram.org/bot<bot_token>/setWebhook?url=<webhook_url>"`
 
-```sh
-$ npm install express
-```
-
-And then edit the contents of `api/index.ts` to
-
-```js
-require("../src/index");
-
-import express from "express";
-import { webhookCallback } from "grammy";
-
-import bot from "../src/core/bot";
-
-const app = express();
-
-app.use(express.json());
-app.use(`/api/index`, webhookCallback(bot));
-
-export default app;
-```
-
-## Contributing
-
-Pull requests are welcome. If you have any suggestions, you can also create an [issue](https://github.com/neumanf/grammy-vercel-boilerplate/issues).
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
+That's it! Your bot should be ready to go.

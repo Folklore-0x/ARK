@@ -8,5 +8,6 @@ const composer = new Composer<MyContext>()
 
 composer.on("message").command("ask", ask)
 composer.on("message").command("reset", reset)
+composer.on("message").command("info", info)
 
 export default composer
