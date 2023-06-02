@@ -105,10 +105,10 @@ class Mendable {
       response: responseText,
     })
 
-    // Only keep the last 3 items in the history.
+    // Only keep the last 2 items in the history.
     // This is to prevent the session from growing too large,
     // and the Mendable prompt from getting too long.
-    conversation.history = conversation.history.slice(-3)
+    conversation.history = conversation.history.slice(-2)
 
     return responseText + sourceAppendix
   }
