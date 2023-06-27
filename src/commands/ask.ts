@@ -18,11 +18,13 @@ const getConversation = (context: MyContext): Conversation | null => {
 /**
  * A wrapper of the Mendable API.
  */
-class Mendable {
+export class Mendable {
   private apiKey: string
+  private includeHistory: boolean
 
-  constructor(api_key: string) {
-    this.apiKey = api_key
+  constructor(apiKey: string, includeHistory: boolean = false) {
+    this.apiKey = apiKey
+    this.includeHistory = includeHistory
   }
 
   /**
@@ -74,7 +76,7 @@ class Mendable {
       question: question,
       shouldStream: false,
       conversation_id: conversation.conversationId,
-      history: conversation.history,
+      history: this.includeHistory ? conversation.history : [],
       api_key: this.apiKey,
     }
 
