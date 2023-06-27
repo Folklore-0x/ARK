@@ -22,7 +22,7 @@ async function handler(req, res) {
   await runMiddleware(
     req,
     res,
-    webhookCallback(bot, "express", "throw", 20_000)
+    webhookCallback(bot, "express", "throw", 25_000)
   )
 }
 
