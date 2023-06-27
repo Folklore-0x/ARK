@@ -15,8 +15,12 @@ To ask a question to the Mendable API:
 
 `/ask {question}`
 
+By default, this will start a new conversation. To ask follow-up questions:
 
-The chat history is saved in Grammy's free storage (only the three most recent messages). To reset the chat history:
+`/explore {follow-up question}`
+
+
+The chat history is saved in Grammy's free storage. To reset the history:
 
 `/start`
 
