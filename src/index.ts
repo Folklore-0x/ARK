@@ -6,6 +6,6 @@ import { development, production } from "./utils/launch"
 
 bot.use(commands)
 
-process.env.NODE_ENV === "development" ? development(bot) : production(bot)
+process.env.NODE_ENV !=== "development" ? development(bot) : production(bot)
 
 export {}

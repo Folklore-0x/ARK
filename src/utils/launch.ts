@@ -4,14 +4,20 @@ import { MyContext } from "src/types"
 
 const production = async (bot: Bot<MyContext>): Promise<void> => {
   try {
-    const response = await fetch(
-      `https://api.telegram.org/bot${process.env.BOT_TOKEN}/setWebhook?url=${process.env.VERCEL_URL}`
-    )
-    const text = await response.text()
+    console.time("set_webhook")
+    const url = await bot.api.getWebhookInfo().then((info) => info.url)
 
-    console.log(`[SERVER] Webhook Response: ${text}`)
+    if (url !== process.env.VERCEL_URL) {
+      console.log(`[SERVER] Setting up webhook for ${process.env.VERCEL_URL}`)
+      await bot.api.setWebhook(process.env.VERCEL_URL!)
+    } else {
+      console.log(`[SERVER] Webhook already set to ${process.env.VERCEL_URL}`)
+    }
+
     console.log(`[SERVER] Bot starting webhook`)
+    console.timeEnd("set_webhook")
   } catch (e) {
+    console.log("Failed to set webhook")
     console.error(e)
   }
 }

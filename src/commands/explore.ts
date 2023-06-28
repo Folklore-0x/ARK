@@ -19,8 +19,10 @@ const explore = async (ctx: MyContext): Promise<void> => {
   }, 5000)
 
   // Get the response from Mendable.
+  console.time("explore")
   const mendable = new Mendable(String(process.env.MENDABLE_API_KEY), true)
   const response = await mendable.call(ctx)
+  console.timeEnd("explore")
 
   await ctx.reply(response, {
     parse_mode: "Markdown",

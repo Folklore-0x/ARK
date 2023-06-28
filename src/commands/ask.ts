@@ -35,13 +35,15 @@ export class Mendable {
   private async _start_conversation(): Promise<Conversation> {
     const data = { api_key: this.apiKey }
 
+    console.time("mendable_conversation")
     const response = await fetch("https://api.mendable.ai/v0/newConversation", {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
     })
-
+    console.timeEnd("mendable_conversation")
     const response_data = await response.json()
+
     return {
       conversationId: response_data["conversation_id"],
       history: [],
@@ -66,7 +68,9 @@ export class Mendable {
     // Get the conversation ID from the session, or start a new one.
     //
     let conversation = getConversation(ctx)
+
     console.log("Conversation: ", conversation)
+
     if (!conversation) {
       conversation = await this._start_conversation()
       ctx.session.conversations[String(ctx.chat?.id)] = conversation
@@ -76,18 +80,21 @@ export class Mendable {
       question: question,
       shouldStream: false,
       conversation_id: conversation.conversationId,
-      history: this.includeHistory ? conversation.history : [],
+      history:
+        this.includeHistory && conversation.history ? conversation.history : [],
       api_key: this.apiKey,
     }
 
     // Call the API.
+    console.time("mendable")
     const response = await fetch("https://api.mendable.ai/v0/mendableChat", {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
     })
-
     const responseData = await response.json()
+    console.timeEnd("mendable")
+
     let responseText = responseData["answer"]["text"]
 
     // Append the first five sources at the end of the response.
@@ -131,7 +138,9 @@ const ask = async (ctx: MyContext): Promise<void> => {
 
   // Get the response from Mendable.
   const mendable = new Mendable(String(process.env.MENDABLE_API_KEY))
+  console.time("ask")
   const response = await mendable.call(ctx)
+  console.timeEnd("ask")
 
   await ctx.reply(response, {
     parse_mode: "Markdown",
