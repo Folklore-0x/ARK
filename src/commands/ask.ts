@@ -92,6 +92,12 @@ export class Mendable {
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
     })
+
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error("Error calling Mendable API: " + text)
+    }
+
     const responseData = await response.json()
     console.timeEnd("mendable")
 
