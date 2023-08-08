@@ -95,6 +95,7 @@ export class Mendable {
 
     if (!response.ok) {
       const text = await response.text()
+      console.log("Error calling Mendable API: ", text)
       throw new Error("Error calling Mendable API: " + text)
     }
 
