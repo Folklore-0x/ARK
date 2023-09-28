@@ -1,4 +1,4 @@
-# Community Telegram Bot
+# ARK
 
 This is a community telegram bot that answers questions about a community through the Mendable API.
 
